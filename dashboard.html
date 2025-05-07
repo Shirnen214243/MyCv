@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <title>Админ Самбар</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #1c1e22;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #00aaff;
+    }
+    .section {
+      background: #2a2c31;
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .logout-btn {
+      float: right;
+      padding: 10px 20px;
+      background: #ff4444;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .logout-btn:hover {
+      background: #ff0000;
+    }
+    .edit-btn {
+      background: #00aaff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .edit-btn:hover {
+      background: #0099cc;
+    }
+    .editable {
+      background: #333;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      color: white;
+    }
+
+    /* Тохиргоо хэсэг */
+    .settings-form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .settings-form input {
+      margin: 10px 0;
+      padding: 10px;
+      background: #333;
+      border: none;
+      border-radius: 5px;
+      color: #fff;
+    }
+
+    .settings-form button {
+      padding: 10px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .settings-form button:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="logout-btn" onclick="logout()">Гарах</button>
+    <h1>Админы Самбар</h1>
+
+    <div class="section">
+      <h2>Төслүүд <button class="edit-btn" onclick="editProject()">Засах</button></h2>
+      <ul id="projects-list">
+        <li class="editable" contenteditable="true">CV вэб сайт</li>
+        <li class="editable" contenteditable="true">Цаг бүртгэлийн систем</li>
+        <li class="editable" contenteditable="true">Номын сангийн бүртгэл</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Хэрэглэгчид <button class="edit-btn" onclick="editUsers()">Засах</button></h2>
+      <ul id="users-list">
+        <li class="editable" contenteditable="true">shirnen214@gmail.com</li>
+        <li class="editable" contenteditable="true">admin@site.mn</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>Тохиргоо</h2>
+
+      <!-- Нууц үг солих хэсэг -->
+      <div>
+        <h3>Нууц үг солих</h3>
+        <form id="change-password-form" class="settings-form" onsubmit="return changePassword()">
+          <input type="password" id="old-password" placeholder="Хуучин нууц үг" required />
+          <input type="password" id="new-password" placeholder="Шинэ нууц үг" required />
+          <input type="password" id="confirm-password" placeholder="Шинэ нууц үг дахин оруул" required />
+          <button type="submit">Нууц үг солих</button>
+        </form>
+        <p id="password-message"></p>
+      </div>
+
+      <!-- Хэрэглэгч нэмэх/устгах -->
+      <div>
+        <h3>Хэрэглэгч нэмэх</h3>
+        <form id="add-user-form" class="settings-form" onsubmit="return addUser()">
+          <input type="email" id="new-user-email" placeholder="Шинэ хэрэглэгчийн имэйл" required />
+          <button type="submit">Хэрэглэгч нэмэх</button>
+        </form>
+        <p id="add-user-message"></p>
+
+        <h3>Хэрэглэгч устгах</h3>
+        <form id="remove-user-form" class="settings-form" onsubmit="return removeUser()">
+          <input type="email" id="remove-user-email" placeholder="Устгах хэрэглэгчийн имэйл" required />
+          <button type="submit">Хэрэглэгч устгах</button>
+        </form>
+        <p id="remove-user-message"></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function logout() {
+      window.location.href = "admin.html"; // Гарах товч
+    }
+
+    function changePassword() {
+      const oldPassword = document.getElementById('old-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+
+      // Хуучин болон шинэ нууц үг нийцэж байгаа эсэхийг шалгах
+      if (oldPassword === "admin123" && newPassword === confirmPassword) {
+        document.getElementById('password-message').innerText = "Нууц үг амжилттай солигдлоо!";
+        return false; // form-ыг дахин дамжуулахгүй
+      } else {
+        document.getElementById('password-message').innerText = "Нууц үг буруу эсвэл шинэ нууц үг тохирохгүй байна!";
+        return false;
+      }
+    }
+
+    function addUser() {
+      const newUserEmail = document.getElementById('new-user-email').value;
+
+      // Шинэ хэрэглэгч нэмэх
+      if (newUserEmail) {
+        document.getElementById('add-user-message').innerText = `${newUserEmail} амжилттай нэмэгдлээ!`;
+        return false; // form-ыг дахин дамжуулахгүй
+      } else {
+        document.getElementById('add-user-message').innerText = "Имэйл хаяг оруулна уу!";
+        return false;
+      }
+    }
+
+    function removeUser() {
+      const removeUserEmail = document.getElementById('remove-user-email').value;
+
+      // Хэрэглэгч устгах
+      if (removeUserEmail) {
+        document.getElementById('remove-user-message').innerText = `${removeUserEmail} амжилттай устгагдлаа!`;
+        return false; // form-ыг дахин дамжуулахгүй
+      } else {
+        document.getElementById('remove-user-message').innerText = "Устгах имэйл хаяг оруулна уу!";
+        return false;
+      }
+    }
+
+    function editProject() {
+      const projects = document.querySelectorAll('#projects-list li');
+      projects.forEach(project => {
+        project.contentEditable = true;
+      });
+    }
+
+    function editUsers() {
+      const users = document.querySelectorAll('#users-list li');
+      users.forEach(user => {
+        user.contentEditable = true;
+      });
+    }
+  </script>
+</body>
+</html>
